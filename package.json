@@ -1,0 +1,10 @@
+{
+  "name": "toolbatcher",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix frontend\" \"node backend/index.js\""  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
