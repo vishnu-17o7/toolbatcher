@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"npm run dev --prefix frontend\" \"node backend/index.js\""  },
+    "dev": "concurrently \"npm run dev --prefix frontend\" \"node backend/index.js\""
+  },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "mysql2": "^3.11.3"
+  }
 }

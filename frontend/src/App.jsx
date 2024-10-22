@@ -11,7 +11,8 @@ import {
   Documentation,
   HowToUse,
   Features,
-  About
+  About,
+  AdminPage
 } from './components';
 
 import styles from './style';
@@ -43,6 +44,7 @@ const App = () => {
               <Route path="/how-to-use" element={<HowToUse />} />
               <Route path="/features" element={<Features />} />
               <Route path="/about" element={<About />} />
+              <Route path="/admin" element={<AdminPage />} />
             </Routes>
           </div>
         </div>

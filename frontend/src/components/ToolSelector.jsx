@@ -13,10 +13,10 @@ const ToolSelector = () => {
 
     useEffect(() => {
         console.log('Fetching tools...');
-        axios.get('http://localhost:3001/tools')
+        axios.get('http://localhost:3001/api/tools')
             .then(response => {
                 console.log('Tools fetched:', response.data);
-                if (Array.isArray(response.data) && response.data.every(tool => tool.name && Array.isArray(tool.versions))) {
+                if (Array.isArray(response.data) && response.data.every(tool => tool.toolName && Array.isArray(tool.versions))) {
                     setTools(response.data.map(tool => ({
                         ...tool,
                         selectedVersion: tool.versions[0] // Default to first version
@@ -35,13 +35,13 @@ const ToolSelector = () => {
 
     const handleToolChange = (tool) => {
         setSelectedTools(prev =>
-            prev.includes(tool.name) ? prev.filter(t => t !== tool.name) : [...prev, tool.name]
+            prev.includes(tool.toolName) ? prev.filter(t => t !== tool.toolName) : [...prev, tool.toolName]
         );
     };
 
     const handleVersionChange = (toolName, version) => {
         setTools(prev => prev.map(tool => 
-            tool.name === toolName ? { ...tool, selectedVersion: version } : tool
+            tool.toolName === toolName ? { ...tool, selectedVersion: version } : tool
         ));
     };
 
@@ -51,15 +51,15 @@ const ToolSelector = () => {
 
     const generateScript = () => {
         const selectedToolsWithVersions = tools
-            .filter(tool => selectedTools.includes(tool.name))
-            .map(tool => ({ name: tool.name, version: tool.selectedVersion }));
+            .filter(tool => selectedTools.includes(tool.toolName))
+            .map(tool => ({ name: tool.toolName, version: tool.selectedVersion }));
 
-        axios.post('http://localhost:3001/generate-script', { selectedTools: selectedToolsWithVersions, targetOS })
+        axios.post('http://localhost:3001/api/tools/generate-script', { selectedTools: selectedToolsWithVersions, targetOS })
             .then(response => {
                 console.log('Script generated:', response.data);
                 setScript(response.data.script);
                 setError('');
-                setShowScript(false);
+                setShowScript(true);
             })
             .catch(error => {
                 console.error('Error generating script:', error);
@@ -99,96 +99,76 @@ const ToolSelector = () => {
         document.body.removeChild(element);
     };
 
-    const toggleViewScript = () => {
-        setShowScript(!showScript);
-    };
-
     return (
-        <section className={`${styles.flexCenter} ${styles.marginY} ${styles.padding} sm:flex-row flex-col bg-black-gradient-2 rounded-[20px] box-shadow`}>
-            <div className="flex-1 flex flex-col">
+        <section id="toolSelector" className={`${styles.flexCenter} ${styles.marginY} ${styles.padding} flex-col bg-black-gradient-2 rounded-[20px] box-shadow`}>
+            <div className="w-full max-w-[800px]">
                 <h2 className={styles.heading2}>Command-Line Tool Selector</h2>
                 {error && <p className="text-red-500 mt-2">{error}</p>}
-                <div className={`${styles.paragraph} max-w-[470px] mt-5`}>
+                <div className={`${styles.paragraph} mt-5`}>
                     <h3 className={styles.heading3}>Select Tools and Versions</h3>
-                    {tools.length === 0 ? (
-                        <p>Loading tools...</p>
-                    ) : (
-                        tools.map(tool => (
-                            <div key={tool.name} className="flex items-center mt-2">
-                                <input
-                                    type="checkbox"
-                                    id={tool.name}
-                                    value={tool.name}
-                                    onChange={() => handleToolChange(tool)}
-                                    className="mr-2"
-                                />
-                                <label htmlFor={tool.name} className={`${styles.paragraph} mr-2 capitalize`}>{tool.name}</label>
-                                <select 
-                                    value={tool.selectedVersion}
-                                    onChange={(e) => handleVersionChange(tool.name, e.target.value)}
-                                    className="p-1 rounded bg-white text-black"
-                                    disabled={!selectedTools.includes(tool.name)}
-                                >
-                                    {tool.versions.map(version => (
-                                        <option key={version} value={version}>{version}</option>
-                                    ))}
-                                </select>
-                            </div>
-                        ))
-                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                        {tools.length === 0 ? (
+                            <p>Loading tools...</p>
+                        ) : (
+                            tools.map(tool => (
+                                <div key={tool.toolName} className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        id={tool.toolName}
+                                        value={tool.toolName}
+                                        onChange={() => handleToolChange(tool)}
+                                        className="mr-2"
+                                    />
+                                    <label htmlFor={tool.toolName} className={`${styles.paragraph} mr-2 capitalize`}>{tool.toolName}</label>
+                                    <select 
+                                        value={tool.selectedVersion}
+                                        onChange={(e) => handleVersionChange(tool.toolName, e.target.value)}
+                                        className="p-1 rounded bg-white text-black"
+                                        disabled={!selectedTools.includes(tool.toolName)}
+                                    >
+                                        {tool.versions.map(version => (
+                                            <option key={version} value={version}>{version}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            ))
+                        )}
+                    </div>
                 </div>
-                <div className={`${styles.paragraph} max-w-[470px] mt-5`}>
+                <div className={`${styles.paragraph} mt-5`}>
                     <h3 className={styles.heading3}>Select Target OS</h3>
-                    <select onChange={handleOSChange} value={targetOS} className="mt-2 p-2 rounded bg-white text-black">
+                    <select onChange={handleOSChange} value={targetOS} className="mt-2 p-2 rounded bg-white text-black w-full">
                         <option value="">Select OS</option>
                         <option value="linux">Linux</option>
                         <option value="macos">macOS</option>
                         <option value="windows">Windows</option>
                     </select>
                 </div>
-                <button onClick={generateScript} className={`${styles.flexCenter} w-[140px] h-[140px] rounded-full bg-blue-gradient p-[2px] cursor-pointer mt-5`}>
-                    <div className={`${styles.flexCenter} flex-col bg-primary w-[100%] h-[100%] rounded-full`}>
-                        <div className={`${styles.flexStart} flex-row`}>
-                            <p className="font-poppins font-medium text-[18px] leading-[23px] mr-2">
-                                <span className="text-gradient">Generate</span>
-                            </p>
-                        </div>
-                        <p className="font-poppins font-medium text-[18px] leading-[23px]">
-                            <span className="text-gradient">Script</span>
-                        </p>
-                    </div>
+                <button onClick={generateScript} className={`py-4 px-6 bg-blue-gradient font-poppins font-medium text-[18px] text-primary outline-none ${styles.flexCenter} mt-5 rounded-[10px] w-full`}>
+                    Generate Script
                 </button>
-                {script && (
-                    <div className="mt-5 flex flex-col items-center">
-                        <div className="flex mb-5">
-                            <button 
-                                onClick={downloadScript}
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
-                            >
-                                Download Script
-                            </button>
-                            <button 
-                                onClick={toggleViewScript}
-                                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                            >
-                                {showScript ? 'Hide Script' : 'View Script'}
-                            </button>
-                        </div>
-                    </div>
-                )}
-            </div>  
+            </div>
+            
             {showScript && script && (
-                <div className={`${styles.paragraph} max-w-[470px] mt-5 mx-auto flex flex-col items-center`}>
+                <div className="w-full max-w-[800px] mt-10">
                     <div className="flex justify-between items-center mb-4">
                         <h3 className={styles.heading3}>Generated Script</h3>
-                        <button 
-                            onClick={copyToClipboard}
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                        >
-                            {copySuccess || 'Copy'}
-                        </button>
+                        <div className="flex">
+                            <button 
+                                onClick={downloadScript}
+                                className={`py-2 px-4 bg-blue-gradient font-poppins font-medium text-[16px] text-primary outline-none ${styles.flexCenter} mr-2 rounded-[10px]`}
+                            >
+                                Download
+                            </button>
+                            <button 
+                                onClick={copyToClipboard}
+                                className={`py-2 px-4 bg-blue-gradient font-poppins font-medium text-[16px] text-primary outline-none ${styles.flexCenter} rounded-[10px]`}
+                            >
+                                {copySuccess || 'Copy'}
+                            </button>
+                        </div>
                     </div>
-                    <pre className="bg-discount-gradient p-4 rounded mt-2 overflow-x-auto max-w-[90%] text-white text-sm leading-relaxed">
+                    <pre className="bg-discount-gradient p-6 rounded-[10px] overflow-x-auto w-full text-white text-sm leading-relaxed">
                         {script}
                     </pre>
                 </div>
