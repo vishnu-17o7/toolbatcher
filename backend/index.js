@@ -19,7 +19,7 @@ app.use(express.json());
 // Routes
 app.use('/api/tools', toolRoutes);
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;  // Changed port to 3002
 app.listen(PORT, () => {
     console.log(`Backend running on port ${PORT}`);
 });

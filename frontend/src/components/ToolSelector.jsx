@@ -13,7 +13,7 @@ const ToolSelector = () => {
 
     useEffect(() => {
         console.log('Fetching tools...');
-        axios.get('http://localhost:3001/api/tools')
+        axios.get('http://localhost:3002/api/tools')  // Updated port to 3002
             .then(response => {
                 console.log('Tools fetched:', response.data);
                 if (Array.isArray(response.data) && response.data.every(tool => tool.toolName && Array.isArray(tool.versions))) {
@@ -54,7 +54,7 @@ const ToolSelector = () => {
             .filter(tool => selectedTools.includes(tool.toolName))
             .map(tool => ({ name: tool.toolName, version: tool.selectedVersion }));
 
-        axios.post('http://localhost:3001/api/tools/generate-script', { selectedTools: selectedToolsWithVersions, targetOS })
+        axios.post('http://localhost:3002/api/tools/generate-script', { selectedTools: selectedToolsWithVersions, targetOS })  // Updated port to 3002
             .then(response => {
                 console.log('Script generated:', response.data);
                 setScript(response.data.script);

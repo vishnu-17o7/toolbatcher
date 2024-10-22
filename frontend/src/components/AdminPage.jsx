@@ -14,7 +14,7 @@ const AdminPage = () => {
 
     const fetchTools = async () => {
         try {
-            const response = await axios.get('http://localhost:3001/api/tools');
+            const response = await axios.get('http://localhost:3002/api/tools');  // Updated port to 3002
             setTools(response.data);
         } catch (error) {
             console.error('Error fetching tools:', error);
@@ -42,9 +42,9 @@ const AdminPage = () => {
         e.preventDefault();
         try {
             if (editingTool) {
-                await axios.put(`http://localhost:3001/api/tools/${editingTool._id}`, newTool);
+                await axios.put(`http://localhost:3002/api/tools/${editingTool._id}`, newTool);  // Updated port to 3002
             } else {
-                await axios.post('http://localhost:3001/api/tools', newTool);
+                await axios.post('http://localhost:3002/api/tools', newTool);  // Updated port to 3002
             }
             fetchTools();
             setNewTool({ toolName: '', versions: '', commands: { linux: '', macos: '', windows: '' } });
@@ -65,7 +65,7 @@ const AdminPage = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:3001/api/tools/${id}`);
+            await axios.delete(`http://localhost:3002/api/tools/${id}`);  // Updated port to 3002
             fetchTools();
         } catch (error) {
             console.error('Error deleting tool:', error);

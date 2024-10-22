@@ -1,8 +1,16 @@
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const path = require('path');
+
+// Load environment variables from .env file
+dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
 
 const connectDB = async () => {
     try {
-        await mongoose.connect('mongodb://localhost:27017/toolCommandsDB', {
+        if (!process.env.DATABASE_URL) {
+            throw new Error('DATABASE_URL is not defined in the environment variables');
+        }
+        await mongoose.connect(process.env.DATABASE_URL, {
             useNewUrlParser: true,
             useUnifiedTopology: true
         });
