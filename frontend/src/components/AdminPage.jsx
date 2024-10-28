@@ -15,7 +15,7 @@ const AdminPage = () => {
 
     const fetchTools = async () => {
         try {
-            const response = await axios.get('http://localhost:3002/api/tools');  // Updated port to 3002
+            const response = await axios.get('http://localhost:3002/api/tools');
             setTools(response.data);
         } catch (error) {
             console.error('Error fetching tools:', error);
@@ -43,9 +43,9 @@ const AdminPage = () => {
         e.preventDefault();
         try {
             if (editingTool) {
-                await axios.put(`http://localhost:3002/api/tools/${editingTool._id}`, newTool);  // Updated port to 3002
+                await axios.put(`http://localhost:3002/api/tools/${editingTool._id}`, newTool);
             } else {
-                await axios.post('http://localhost:3002/api/tools', newTool);  // Updated port to 3002
+                await axios.post('http://localhost:3002/api/tools', newTool);
             }
             fetchTools();
             setNewTool({ toolName: '', versions: '', commands: { linux: '', macos: '', windows: '' } });
@@ -66,7 +66,7 @@ const AdminPage = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:3002/api/tools/${id}`);  // Updated port to 3002
+            await axios.delete(`http://localhost:3002/api/tools/${id}`);
             fetchTools();
         } catch (error) {
             console.error('Error deleting tool:', error);
@@ -75,19 +75,19 @@ const AdminPage = () => {
     };
 
     return (
-        
-        <div className={`${styles.flexCenter} ${styles.marginY} ${styles.padding} flex-col bg-black-gradient-2 rounded-[20px] box-shadow`}>
-            <h2 className={styles.heading2}>Admin Page</h2>
+        <div className={`${styles.flexCenter} ${styles.marginY} ${styles.padding} flex-col bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl shadow-lg`}>
+            <h2 className={`${styles.heading2} text-white mb-8`}>Admin Dashboard</h2>
             {error && <p className="text-red-500 mt-2">{error}</p>}
-            
-            <form onSubmit={handleSubmit} className="w-full max-w-lg mt-5">
+
+            <form onSubmit={handleSubmit} className="w-full max-w-lg mt-5 bg-white p-8 rounded-lg shadow-md">
+                <h3 className="text-lg font-semibold text-gray-700 mb-4">{editingTool ? 'Edit Tool' : 'Add New Tool'}</h3>
                 <input
                     type="text"
                     name="toolName"
                     value={newTool.toolName}
                     onChange={handleInputChange}
                     placeholder="Tool Name"
-                    className="w-full p-2 mb-4 rounded text-black"
+                    className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     required
                 />
                 <input
@@ -96,8 +96,7 @@ const AdminPage = () => {
                     value={newTool.versions}
                     onChange={handleInputChange}
                     placeholder="Versions (comma-separated)"
-                    className="w-full p-2 mb-4 rounded text-black"
-                        // required
+                    className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 />
                 <input
                     type="text"
@@ -105,7 +104,7 @@ const AdminPage = () => {
                     value={newTool.commands.linux}
                     onChange={handleInputChange}
                     placeholder="Linux Command"
-                    className="w-full p-2 mb-4 rounded text-black"
+                    className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     required
                 />
                 <input
@@ -114,7 +113,7 @@ const AdminPage = () => {
                     value={newTool.commands.macos}
                     onChange={handleInputChange}
                     placeholder="macOS Command"
-                    className="w-full p-2 mb-4 rounded text-black"
+                    className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     required
                 />
                 <input
@@ -123,32 +122,36 @@ const AdminPage = () => {
                     value={newTool.commands.windows}
                     onChange={handleInputChange}
                     placeholder="Windows Command"
-                    className="w-full p-2 mb-4 rounded text-black"
+                    className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     required
                 />
-                <button type="submit" className={`py-4 px-6 bg-blue-gradient font-poppins font-medium text-[18px] text-primary outline-none ${styles.flexCenter} rounded-[10px] w-full`}>
+                <button type="submit" className="w-full p-3 mt-4 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none">
                     {editingTool ? 'Update Tool' : 'Add Tool'}
                 </button>
             </form>
 
             <div className="w-full mt-10">
-                <h3 className={styles.heading3}>Existing Tools</h3>
-                {tools.map(tool => (
-                    <div key={tool._id} className="bg-discount-gradient p-4 rounded-[10px] mb-4 flex justify-between items-center">
-                        <div>
-                            <h4 className={styles.heading4}>{tool.toolName}</h4>
-                            <p>Versions: {tool.versions.join(', ')}</p>
+                <h3 className={`${styles.heading3} text-white`}>Existing Tools</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+                    {tools.map(tool => (
+                        <div key={tool._id} className="bg-gradient-to-r from-purple-600 to-indigo-600 p-5 rounded-lg shadow-lg">
+                            <h4 className="text-lg font-semibold text-white">{tool.toolName}</h4>
+                            <p className="text-sm text-gray-200 mt-1">Versions: {tool.versions.join(', ')}</p>
+                            <div className="flex mt-3 space-x-2">
+                                <button onClick={() => handleEdit(tool)} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                                    Edit
+                                </button>
+                                <button onClick={() => handleDelete(tool._id)} className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+                                    Delete
+                                </button>
+                            </div>
                         </div>
-                        <div>
-                            <button onClick={() => handleEdit(tool)} className="bg-blue-gradient px-4 py-2 rounded mr-2">Edit</button>
-                            <button onClick={() => handleDelete(tool._id)} className="bg-red-500 px-4 py-2 rounded">Delete</button>
-                        </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
+
             <FeedbackList />
         </div>
-        
     );
 };
 

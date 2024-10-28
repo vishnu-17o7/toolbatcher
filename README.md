@@ -19,3 +19,19 @@ Toolbatcher is a web application designed to streamline developers' workflows by
 - **HTTP Client**: Axios
 - **Version Control**: Git
 - **Package Manager**: npm
+
+## 4. How to Use
+To use Toolbatcher, follow these steps:
+npm install
+cd frontend
+npm install
+cd backend
+npm install
+
+Create a .env file in the backend directory with the following environment variables:
+- PORT=5000
+- NODE_ENV=development
+- MONGO_URI=your_mongodb_uri
+
+Run the following commands to start the frontend and backend servers:
+npm run dev (in the root directory)
