@@ -1,5 +1,4 @@
 import CTA from './CTA'
-import Feedback from './Feedback'
 import Footer from './Footer'
 import Hero from './Hero'
 import Navbar from './Navbar'
@@ -14,7 +13,6 @@ import AdminPage from './AdminPage'
 
 export {
     CTA,
-    Feedback,
     Footer,
     Hero,
     Navbar,

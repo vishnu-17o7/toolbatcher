@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from '../style';
+import FeedbackList from './admin/FeedbackList';
 
 const AdminPage = () => {
     const [tools, setTools] = useState([]);
@@ -74,6 +75,7 @@ const AdminPage = () => {
     };
 
     return (
+        
         <div className={`${styles.flexCenter} ${styles.marginY} ${styles.padding} flex-col bg-black-gradient-2 rounded-[20px] box-shadow`}>
             <h2 className={styles.heading2}>Admin Page</h2>
             {error && <p className="text-red-500 mt-2">{error}</p>}
@@ -144,7 +146,9 @@ const AdminPage = () => {
                     </div>
                 ))}
             </div>
+            <FeedbackList />
         </div>
+        
     );
 };
 

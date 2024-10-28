@@ -2,6 +2,7 @@ import React from 'react'
 import styles from '../style'
 import { logo } from '../assets'
 import { socialMedia } from '../constants'
+import FeedbackForm from './Footer/FeedbackForm'
 
 const footerLinks = [
   {
@@ -67,6 +68,12 @@ const Footer = () => {
           ))}
         </div>
       </div>
+
+      {/* Feedback Form Section */}
+      <div className='w-full border-t-[1px] border-t-[#3F3E45] p-4 mb-8'>
+        <FeedbackForm />
+      </div>
+
       <div className='w-full flex justify-between items-center md:flex-row flex-col pt-6 border-t-[1px] border-t-[#3F3E45] p-4'>
         <p className='font-poppins font-normal text-center text-[18px] leading-[27px] text-white'>
           2023 Toolbatcher. All Rights Reserved.
