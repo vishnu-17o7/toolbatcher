@@ -7,7 +7,6 @@ import {
   Navbar, 
   Stats, 
   ToolSelector,
-  CodeEditor,
   Documentation,
   HowToUse,
   Features,
@@ -15,6 +14,7 @@ import {
   AdminPage
 } from './components';
 
+import FeedbackForm from './components/FeedbackForm';
 import styles from './style';
 
 const Home = () => (
@@ -35,7 +35,9 @@ const AppContent = () => {
       {!isAdminPage && (
         <div className={`${styles.paddingX} ${styles.flexCenter}`}>
           <div className={`${styles.boxWidth}`}>
-            <Navbar/>
+            <div className="flex justify-between items-center">
+              <Navbar/>
+            </div>
           </div>
         </div>
       )}
@@ -43,11 +45,11 @@ const AppContent = () => {
         <div className={`${styles.boxWidth}`}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/codeeditor" element={<CodeEditor />} />
             <Route path="/documentation" element={<Documentation />} />
             <Route path="/how-to-use" element={<HowToUse />} />
             <Route path="/features" element={<Features />} />
             <Route path="/about" element={<About />} />
+            <Route path="/feedback" element={<FeedbackForm />} />
             <Route path="/admin" element={<AdminPage />} />
           </Routes>
         </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from '../style';
+import CodeEditor from './CodeEditor';
 
 const ToolSelector = () => {
     const [tools, setTools] = useState([]);
@@ -10,6 +11,7 @@ const ToolSelector = () => {
     const [error, setError] = useState('');
     const [copySuccess, setCopySuccess] = useState('');
     const [showScript, setShowScript] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
         console.log('Fetching tools...');
@@ -54,7 +56,7 @@ const ToolSelector = () => {
             .filter(tool => selectedTools.includes(tool.toolName))
             .map(tool => ({ name: tool.toolName, version: tool.selectedVersion }));
 
-        axios.post('http://localhost:3002/api/tools/generate-script', { selectedTools: selectedToolsWithVersions, targetOS })  // Updated port to 3002
+        axios.post('http://localhost:3002/api/tools/generate-script', { selectedTools: selectedToolsWithVersions, targetOS })  
             .then(response => {
                 console.log('Script generated:', response.data);
                 setScript(response.data.script);
@@ -97,6 +99,11 @@ const ToolSelector = () => {
         document.body.appendChild(element);
         element.click();
         document.body.removeChild(element);
+    };
+
+    const handleScriptSave = (newScript) => {
+        setScript(newScript);
+        setIsEditing(false);
     };
 
     return (
@@ -168,9 +175,21 @@ const ToolSelector = () => {
                             </button>
                         </div>
                     </div>
-                    <pre className="bg-discount-gradient p-6 rounded-[10px] overflow-x-auto w-full text-white text-sm leading-relaxed">
-                        {script}
-                    </pre>
+                    {isEditing ? (
+                        <CodeEditor initialCode={script} onSave={handleScriptSave} />
+                    ) : (
+                        <div className="relative">
+                            <pre className="bg-discount-gradient p-6 rounded-[10px] overflow-x-auto w-full text-white text-sm leading-relaxed">
+                                {script}
+                            </pre>
+                            <button
+                                onClick={() => setIsEditing(true)}
+                                className={`absolute top-4 right-4 py-2 px-4 bg-blue-gradient font-poppins font-medium text-[16px] text-primary outline-none ${styles.flexCenter} rounded-[10px]`}
+                            >
+                                Edit
+                            </button>
+                        </div>
+                    )}
                 </div>
             )}
         </section>

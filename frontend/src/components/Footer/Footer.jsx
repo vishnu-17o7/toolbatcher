@@ -1,17 +1,16 @@
 import React from 'react';
-import FeedbackForm from './FeedbackForm';
 
 const Footer = () => {
     return (
-        <footer className="bg-white">
+        <footer className="bg-primary text-gray-300">
             <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
                 <div className="xl:grid xl:grid-cols-3 xl:gap-8">
                     {/* Company Info */}
                     <div className="space-y-8 xl:col-span-1">
-                        <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">
+                        <h3 className="text-sm font-semibold tracking-wider uppercase text-yellow-300">
                             ToolBatcher
                         </h3>
-                        <p className="text-base text-gray-500">
+                        <p className="text-base text-gray-400">
                             Making development workflows easier and more efficient.
                         </p>
                     </div>
@@ -24,40 +23,50 @@ const Footer = () => {
                             </h3>
                             <ul className="mt-4 space-y-4">
                                 <li>
-                                    <a href="/docs" className="text-base text-gray-500 hover:text-gray-900">
+                                    <a href="/" className="text-base text-gray-400 hover:text-yellow-300">
+                                        Home
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/documentation" className="text-base text-gray-400 hover:text-yellow-300">
                                         Documentation
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/guides" className="text-base text-gray-500 hover:text-gray-900">
-                                        Guides
+                                    <a href="/how-to-use" className="text-base text-gray-400 hover:text-yellow-300">
+                                        How to Use
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/features" className="text-base text-gray-400 hover:text-yellow-300">
+                                        Features
                                     </a>
                                 </li>
                             </ul>
                         </div>
                         <div>
                             <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">
-                                Support
+                                Company
                             </h3>
                             <ul className="mt-4 space-y-4">
                                 <li>
-                                    <a href="/faq" className="text-base text-gray-500 hover:text-gray-900">
-                                        FAQ
+                                    <a href="/about" className="text-base text-gray-400 hover:text-yellow-300">
+                                        About
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/contact" className="text-base text-gray-500 hover:text-gray-900">
-                                        Contact
+                                    <a href="/feedback" className="text-base text-gray-400 hover:text-yellow-300">
+                                        Feedback
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/admin" className="text-base text-gray-400 hover:text-yellow-300">
+                                        Admin
                                     </a>
                                 </li>
                             </ul>
                         </div>
                     </div>
-                </div>
-
-                {/* Feedback Form Section */}
-                <div className="mt-12 border-t border-gray-200 pt-8">
-                    <FeedbackForm />
                 </div>
 
                 {/* Copyright */}
