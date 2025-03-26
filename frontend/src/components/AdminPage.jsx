@@ -9,9 +9,13 @@ const AdminPage = () => {
     toolName: "",
     versions: "",
     commands: { linux: "", macos: "", windows: "" },
+    sourceType: "manual", // Default sourceType
+    sourceIdentifier: "",
+    latestVersion: "", // Although not directly editable, include for consistency
   });
   const [editingTool, setEditingTool] = useState(null);
   const [error, setError] = useState("");
+  const [updateStatus, setUpdateStatus] = useState(""); // For update feedback
 
   useEffect(() => {
     fetchTools();
@@ -58,10 +62,13 @@ const AdminPage = () => {
         await axios.post("http://localhost:3002/api/tools", newTool);
       }
       fetchTools();
-      setNewTool({
+      setNewTool({ // Reset form including new fields
         toolName: "",
         versions: "",
         commands: { linux: "", macos: "", windows: "" },
+        sourceType: "manual",
+        sourceIdentifier: "",
+        latestVersion: "",
       });
       setEditingTool(null);
     } catch (error) {
@@ -72,9 +79,14 @@ const AdminPage = () => {
 
   const handleEdit = (tool) => {
     setEditingTool(tool);
+    // Ensure all fields, including new ones, are populated when editing
     setNewTool({
-      ...tool,
-      versions: tool.versions.join(","),
+      toolName: tool.toolName || "",
+      versions: tool.versions ? tool.versions.join(",") : "",
+      commands: tool.commands || { linux: "", macos: "", windows: "" },
+      sourceType: tool.sourceType || "manual",
+      sourceIdentifier: tool.sourceIdentifier || "",
+      latestVersion: tool.latestVersion || "", // Include latestVersion if present
     });
   };
 
@@ -85,6 +97,23 @@ const AdminPage = () => {
     } catch (error) {
       console.error("Error deleting tool:", error);
       setError("Failed to delete tool");
+    }
+  };
+
+  // Function to trigger the backend update script
+  const handleCheckForUpdates = async () => {
+    setUpdateStatus("Initiating version check...");
+    setError(""); // Clear previous errors
+    try {
+      const response = await axios.post("http://localhost:3002/api/tools/update-versions");
+      setUpdateStatus(response.data.message || "Update process started. Check server logs for details.");
+      // Optionally, refetch tools after a delay to see updates, though the script runs async
+      // setTimeout(fetchTools, 5000); // Example: Refetch after 5 seconds
+    } catch (error) {
+      console.error("Error triggering update check:", error);
+      const errorMessage = error.response?.data?.message || "Failed to start update process.";
+      setError(errorMessage);
+      setUpdateStatus(""); // Clear status message on error
     }
   };
 
@@ -144,16 +173,51 @@ const AdminPage = () => {
           onChange={handleInputChange}
           placeholder="Windows Command"
           className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-black"
-          required
-        />
+      required
+    />
+    {/* Source Type Dropdown */}
+    <select
+      name="sourceType"
+      value={newTool.sourceType}
+      onChange={handleInputChange}
+      className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-black"
+    >
+      <option value="manual">Manual</option>
+      <option value="npm">NPM</option>
+      <option value="pypi">PyPI</option>
+      <option value="website">Website</option>
+    </select>
+    {/* Source Identifier Input */}
+    <input
+      type="text"
+      name="sourceIdentifier"
+      value={newTool.sourceIdentifier}
+      onChange={handleInputChange}
+      placeholder="Source Identifier (e.g., package name, URL)"
+      className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-black"
+      // Conditionally required if sourceType is not 'manual'
+      required={newTool.sourceType !== 'manual'}
+    />
 
-        <button
-          type="submit"
-          className="w-full p-3 mt-4 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none"
+    <button
+      type="submit"
+      className="w-full p-3 mt-4 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none"
         >
           {editingTool ? "Update Tool" : "Add Tool"}
         </button>
       </form>
+
+      {/* Add a button to trigger the update check */}
+      <div className="w-full max-w-lg mt-5">
+        <button
+          type="button"
+          onClick={handleCheckForUpdates} // Attach the handler
+          className="w-full p-3 text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none"
+        >
+          Check All Tools for Updates
+        </button>
+        {updateStatus && <p className="text-green-300 mt-2">{updateStatus}</p>}
+      </div>
 
       <div className="w-full mt-10">
         <h3 className={`${styles.heading3} text-white`}>Existing Tools</h3>
@@ -167,8 +231,17 @@ const AdminPage = () => {
                 {tool.toolName}
               </h4>
               <p className="text-sm text-gray-200 mt-1">
-                Versions: {tool.versions.join(", ")}
+                Versions: {tool.versions ? tool.versions.join(", ") : 'N/A'}
               </p>
+              {/* Display new fields */}
+              <p className="text-xs text-gray-300 mt-1">
+                Source: {tool.sourceType || 'manual'} ({tool.sourceIdentifier || 'N/A'})
+              </p>
+              {tool.latestVersion && (
+                <p className="text-xs text-yellow-300 mt-1">
+                  Latest Detected: {tool.latestVersion}
+                </p>
+              )}
               <div className="flex mt-3 space-x-2">
                 <button
                   onClick={() => handleEdit(tool)}

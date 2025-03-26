@@ -10,8 +10,8 @@ const app = express();
 connectDB();
 
 const corsOptions = {
-  origin: 'http://localhost:3000',
-  optionsSuccessStatus: 200
+  origin: 'http://localhost:5173',
+  credentials: true
 };
 app.use(cors(corsOptions));
 

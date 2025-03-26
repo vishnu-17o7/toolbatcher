@@ -133,9 +133,21 @@ const ToolSelector = () => {
                                         className="p-1 rounded bg-white text-black"
                                         disabled={!selectedTools.includes(tool.toolName)}
                                     >
-                                        {tool.versions.map(version => (
-                                            <option key={version} value={version}>{version}</option>
-                                        ))}
+                                        {tool.versions.map(version => {
+                                            // Determine if this is the latest version
+                                            const isLatest = tool.latestVersion 
+                                                ? version === tool.latestVersion 
+                                                : version === tool.versions[0];
+                                            return (
+                                                <option 
+                                                    key={version} 
+                                                    value={version}
+                                                    className={isLatest ? 'font-bold' : ''}
+                                                >
+                                                    {version}{isLatest ? ' (latest)' : ''}
+                                                </option>
+                                            );
+                                        })}
                                     </select>
                                 </div>
                             ))
@@ -179,7 +191,7 @@ const ToolSelector = () => {
                         <CodeEditor initialCode={script} onSave={handleScriptSave} />
                     ) : (
                         <div className="relative">
-                            <pre className="bg-discount-gradient p-6 rounded-[10px] overflow-x-auto w-full text-white text-sm leading-relaxed">
+                            <pre className="bg-discount-gradient p-6 rounded-[10px] overflow-x-auto w-full text-white text-sm leading-relaxed whitespace-pre-wrap">
                                 {script}
                             </pre>
                             <button

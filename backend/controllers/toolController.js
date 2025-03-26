@@ -1,4 +1,6 @@
 const ToolCommand = require('../models/ToolCommand');
+const { spawn } = require('child_process'); // To run the update script
+const path = require('path'); // To construct script path
 
 exports.getAllTools = async (req, res) => {
     try {
@@ -87,4 +89,40 @@ exports.generateScript = async (req, res) => {
         console.error("Error generating script:", error);
         res.status(500).json({ error: "Error generating script" });
     }
+};
+
+// Trigger the version update script
+exports.triggerUpdateVersions = (req, res) => {
+    console.log('API endpoint /update-versions hit. Triggering script...');
+
+    const scriptPath = path.join(__dirname, '..', 'scripts', 'update_versions.js');
+    console.log(`Attempting to execute script at: ${scriptPath}`);
+
+    // Spawn the Node.js process to run the script
+    const updateProcess = spawn('node', [scriptPath], {
+        stdio: 'pipe', // Use pipe to capture stdout/stderr if needed later
+        // cwd: path.join(__dirname, '..') // Optional: Set working directory if script relies on it
+    });
+
+    // Log script output (optional but helpful for debugging)
+    updateProcess.stdout.on('data', (data) => {
+        console.log(`Update Script stdout: ${data}`);
+    });
+
+    updateProcess.stderr.on('data', (data) => {
+        console.error(`Update Script stderr: ${data}`);
+    });
+
+    updateProcess.on('close', (code) => {
+        console.log(`Update script process exited with code ${code}`);
+        // We send a response immediately, the script runs in the background
+    });
+
+    updateProcess.on('error', (err) => {
+        console.error('Failed to start update script process:', err);
+        // We still send a success response to the client, but log the error server-side
+    });
+
+    // Respond immediately to the client, indicating the process has started
+    res.status(202).json({ message: "Version update process initiated." });
 };
