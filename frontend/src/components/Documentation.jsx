@@ -82,12 +82,12 @@ tb.save_script(script, 'my_setup_script.sh')
             </span>
           </button>
           <button onClick={toggleViewCode} className={`${styles.flexCenter} w-[140px] h-[50px] rounded-[10px] bg-green-gradient p-1 cursor-pointer`}>
-            <span className={`font-poppins font-medium text-[18px] text-primary`}>
+            <span className={`font-poppins font-medium text-[18px] text-zinc-50     `}>
               {showCode ? 'Hide Code' : 'View Source'}
             </span>
           </button>
         </div>
-        {showCode && (
+        {showCode && (  
           <div className="mt-5 relative">
             <div 
               className="absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 flex items-center justify-center"

@@ -1,24 +1,67 @@
 # Toolbatcher
 
-## 1. Abstract
+**Name**: Vishnu V
+**Department**: Msc Artificial Intelligence and Machine Learning
+**Roll Number**: 71762234060
+
+## Abstract
 Toolbatcher is a web application designed to streamline developers' workflows by allowing them to create, manage, and execute custom batches of command-line tools. It provides an intuitive interface for selecting tools, specifying versions, and generating scripts that can be easily run across different operating systems.
 
-## 2. Modules
-1. **Tool Selection**: Allows users to choose from a variety of command-line tools and specify their versions.
-2. **OS Targeting**: Enables users to select the target operating system for their script generation.
-3. **Script Generation**: Generates custom scripts based on the selected tools and target OS.
-4. **Script Preview**: Provides users with a preview of the generated script before downloading.
-5. **Script Download**: Allows users to download the generated script in the appropriate format for their target OS.
-6. **Documentation**: Offers comprehensive documentation on how to use the Toolbatcher platform and individual tools.
+## Modules and Functionalities
 
-## 3. Software Used
-- **Frontend**: React.js
-- **Backend**: Node.js with Express.js
-- **Styling**: Tailwind CSS
-- **State Management**: React Hooks
-- **HTTP Client**: Axios
-- **Version Control**: Git
-- **Package Manager**: npm
+### 1. Frontend Modules
+
+#### Core Components
+- **Navbar**: Navigation component providing access to different sections of the application
+- **Hero**: Landing page component showcasing main features
+- **ToolSelector**: Interactive component for selecting development tools
+- **CodeEditor**: Component for displaying and copying installation commands
+- **FeedbackForm**: User feedback collection interface
+- **Documentation**: Comprehensive usage guidelines and documentation
+- **AdminPage**: Administrative interface for managing tool data and feedback
+
+#### Features
+- Responsive design using TailwindCSS
+- Cross-browser compatibility
+- Interactive UI elements
+- Real-time command generation
+- Copy-to-clipboard functionality
+- Form validation
+- Admin dashboard
+
+### 2. Backend Modules
+
+#### API Controllers
+- **toolController**: Manages tool-related operations
+- **feedbackController**: Handles feedback submission and retrieval
+
+#### Data Models
+- **ToolCommand**: Schema for tool installation commands
+- **Feedback**: Schema for user feedback storage
+
+#### Routes
+- **/api/tools**: Tool management endpoints
+- **/api/feedback**: Feedback management endpoints
+
+## Software Stack
+
+### Frontend
+- React.js (v18)
+- Vite.js
+- TailwindCSS
+- PostCSS
+
+### Backend
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose ODM
+
+### Development Tools
+- Git
+- npm/yarn
+- VS Code
+- MongoDB Compass
 
 ## 4. How to Use
 To use Toolbatcher, follow these steps:
