@@ -4,8 +4,31 @@ const path = require('path'); // To construct script path
 
 exports.getAllTools = async (req, res) => {
     try {
-        const tools = await ToolCommand.find({});
-        res.json(tools);
+        const tools = await ToolCommand.find({}).lean();
+        const normalizedTools = tools.map((tool) => {
+            const versions = Array.isArray(tool.versions) ? tool.versions.filter(Boolean) : [];
+            const latestVersion = typeof tool.latestVersion === 'string' ? tool.latestVersion.trim() : '';
+
+            if (latestVersion) {
+                return {
+                    ...tool,
+                    versions: [latestVersion, ...versions.filter((version) => version !== latestVersion)],
+                };
+            }
+
+            if (versions.includes('latest')) {
+                return {
+                    ...tool,
+                    versions: ['latest', ...versions.filter((version) => version !== 'latest')],
+                };
+            }
+
+            return {
+                ...tool,
+            };
+        });
+
+        res.json(normalizedTools);
     } catch (error) {
         console.error("Error fetching tools:", error);
         res.status(500).json({ error: "Error fetching tools" });

@@ -1,80 +1,208 @@
-# Toolbatcher
+# ToolBatcher
 
-**Name**: Vishnu V
-**Department**: Msc Artificial Intelligence and Machine Learning
-**Roll Number**: 71762234060
+ToolBatcher generates cross-platform install plans for developer tools and supports one-liner bootstrap commands that execute a verified, token-scoped runner.
 
-## Abstract
-Toolbatcher is a web application designed to streamline developers' workflows by allowing them to create, manage, and execute custom batches of command-line tools. It provides an intuitive interface for selecting tools, specifying versions, and generating scripts that can be easily run across different operating systems.
+## Core Flow
 
-## Modules and Functionalities
+1. User selects tools and target OS in the frontend.
+2. Backend creates an install session with token + signed manifest.
+3. User runs one-liner command.
+4. Bootstrap fetches a nonce-protected runner.
+5. Runner verifies signature, prompts for confirmation, executes steps with retries, and posts status events.
 
-### 1. Frontend Modules
+One-liner examples:
 
-#### Core Components
-- **Navbar**: Navigation component providing access to different sections of the application
-- **Hero**: Landing page component showcasing main features
-- **ToolSelector**: Interactive component for selecting development tools
-- **CodeEditor**: Component for displaying and copying installation commands
-- **FeedbackForm**: User feedback collection interface
-- **Documentation**: Comprehensive usage guidelines and documentation
-- **AdminPage**: Administrative interface for managing tool data and feedback
+```bash
+# Linux/macOS
+curl -fsSL {bootstrap-url} | bash
+```
 
-#### Features
-- Responsive design using TailwindCSS
-- Cross-browser compatibility
-- Interactive UI elements
-- Real-time command generation
-- Copy-to-clipboard functionality
-- Form validation
-- Admin dashboard
+```powershell
+# Windows PowerShell
+irm {bootstrap-url} | iex
+```
 
-### 2. Backend Modules
+## Project Structure
 
-#### API Controllers
-- **toolController**: Manages tool-related operations
-- **feedbackController**: Handles feedback submission and retrieval
+- frontend: React + Vite UI
+- backend: Express API + MongoDB models
+- todo.md: active implementation checklist
 
-#### Data Models
-- **ToolCommand**: Schema for tool installation commands
-- **Feedback**: Schema for user feedback storage
+## Deployment
 
-#### Routes
-- **/api/tools**: Tool management endpoints
-- **/api/feedback**: Feedback management endpoints
+For full deployment instructions (localhost and Vercel), see DEPLOYMENT.md.
 
-## Software Stack
+## Local Setup
 
-### Frontend
-- React.js (v18)
-- Vite.js
-- TailwindCSS
-- PostCSS
+### 1) Install dependencies
 
-### Backend
-- Node.js
-- Express.js
-- MongoDB
-- Mongoose ODM
-
-### Development Tools
-- Git
-- npm/yarn
-- VS Code
-- MongoDB Compass
-
-## 4. How to Use
-To use Toolbatcher, follow these steps:
+```bash
 npm install
-cd frontend
-npm install
+cd frontend && npm install
+cd ../backend && npm install
+```
+
+### 2) Configure backend environment
+
+Create backend/.env with the variables below.
+
+Required:
+
+```env
+DATABASE_URL=mongodb://localhost:27017/toolbatcher
+```
+
+Optional server config:
+
+```env
+PORT=3002
+FRONTEND_ORIGIN=http://localhost:5173
+CORS_ALLOWED_ORIGINS=http://localhost:5173,https://your-app.vercel.app
+PUBLIC_BASE_URL=
+TRUST_PROXY=false
+JSON_BODY_LIMIT=200kb
+LOG_STARTUP_CONFIG=true
+AUTO_SEED_TOOLS_ON_START=true
+AUTO_UPDATE_VERSIONS_ON_START=true
+```
+
+Optional install session config:
+
+```env
+SCRIPT_TTL_MINUTES=30
+INSTALL_SESSION_STORE=mongo
+STRICT_INSTALL_IP=false
+INSTALL_RUNNER_ONE_TIME=true
+INSTALL_STEP_RETRIES=2
+INSTALL_AUDIT_LIMIT=100
+```
+
+Optional security and provider config:
+
+```env
+INSTALL_MANIFEST_SECRET=change-me
+API_RATE_LIMIT_WINDOW_MS=900000
+API_RATE_LIMIT_MAX=300
+INSTALL_RATE_LIMIT_WINDOW_MS=600000
+INSTALL_RATE_LIMIT_MAX=300
+DISABLE_INSTALL_RATE_LIMIT=false
+VERSION_CACHE_TTL_MINUTES=60
+VERSION_FETCH_RETRY_ATTEMPTS=3
+VERSION_FETCH_RETRY_DELAY_MS=600
+# Optional for higher GitHub API limits
+# GITHUB_TOKEN=
+```
+
+### 3) Run app
+
+```bash
+npm run dev
+```
+
+## API Summary
+
+Tool APIs:
+
+```text
+GET    /api/tools
+POST   /api/tools
+PUT    /api/tools/:id
+DELETE /api/tools/:id
+POST   /api/tools/generate-script
+POST   /api/tools/update-versions
+```
+
+Install session APIs:
+
+```text
+POST /api/tools/install-sessions
+GET  /api/tools/install-sessions/:token/manifest
+GET  /api/tools/install-sessions/:token/verify-signature
+GET  /api/tools/install-sessions/:token/bootstrap.sh
+GET  /api/tools/install-sessions/:token/bootstrap.ps1
+GET  /api/tools/install-sessions/:token/runner.sh
+GET  /api/tools/install-sessions/:token/runner.ps1
+POST /api/tools/install-sessions/:token/events
+GET  /api/tools/install-sessions/audit
+```
+
+Feedback APIs:
+
+```text
+POST  /api/feedback
+GET   /api/feedback
+PATCH /api/feedback/:id
+```
+
+Operational endpoints:
+
+```text
+GET /healthz
+GET /api/health
+```
+
+## Version Providers
+
+Tool update checks are provider-based and API-driven.
+
+- npm: npm registry API
+- pypi: PyPI JSON API
+- github: GitHub releases/tags API
+- homebrew: formula API
+- winget: winget-pkgs GitHub code search lookup
+
+Manual tools are skipped by updater.
+
+## Production Operator Notes
+
+### Reverse proxy and headers
+
+- Terminate TLS at reverse proxy.
+- Forward host/proto so one-liner URLs are generated correctly:
+  - X-Forwarded-Proto
+  - X-Forwarded-Host (or Host)
+- If the app sits behind multiple layers or a custom edge, set PUBLIC_BASE_URL explicitly.
+- Set TRUST_PROXY=1 (or true) when deployed behind Vercel/NGINX/Cloudflare so client IP and protocol are interpreted correctly.
+
+### Dynamic bootstrap URL behavior
+
+- Bootstrap and runner URLs are generated from request headers at runtime, so localhost and custom domains both work automatically.
+- If proxy headers are rewritten by infrastructure, PUBLIC_BASE_URL overrides request-derived host/protocol.
+
+### Startup runtime config log
+
+- On backend boot, a safe config snapshot is printed (no secrets) with CORS origins, trust proxy mode, rate limits, and health endpoints.
+- Set LOG_STARTUP_CONFIG=false to disable this startup log.
+
+### TLS
+
+- Serve only over HTTPS in production.
+- Do not expose bootstrap and runner endpoints over plain HTTP.
+
+### Caching
+
+- Do not cache runner and bootstrap responses at CDN/proxy.
+- Keep version provider cache enabled through VERSION_CACHE_TTL_MINUTES.
+
+### Security recommendations
+
+- Set a strong INSTALL_MANIFEST_SECRET.
+- Keep INSTALL_RUNNER_ONE_TIME=true.
+- Keep STRICT_INSTALL_IP=false when behind NAT/proxies unless you fully control source IP consistency.
+- Configure CORS_ALLOWED_ORIGINS to an explicit comma-separated allowlist.
+- Keep API and install-session rate limits enabled in production.
+- Use GITHUB_TOKEN to reduce GitHub API rate-limit failures.
+
+## Testing
+
+```bash
 cd backend
-npm install
+npm test
+```
 
-Create a .env file in the backend directory with the following environment variables:
-- PORT=5000
-- NODE_ENV=development
-- MONGO_URI=your_mongodb_uri
+## Startup Automation
 
-Run the following commands to start the frontend and backend servers:
-npm run dev (in the root directory)
+- On backend startup, ToolBatcher now auto-seeds a relevant default tool catalog into MongoDB.
+- It also auto-runs version provider fetching on startup to refresh latest versions.
+- Use AUTO_SEED_TOOLS_ON_START=false to disable seeding.
+- Use AUTO_UPDATE_VERSIONS_ON_START=false to disable startup version refresh.

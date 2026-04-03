@@ -10,7 +10,7 @@ const toolCommandSchema = new mongoose.Schema({
     },
     sourceType: {
         type: String,
-        enum: ['npm', 'pypi', 'website', 'manual'], // Define possible source types
+        enum: ['npm', 'pypi', 'github', 'homebrew', 'winget', 'website', 'manual'], // Keep website for backward compatibility
         default: 'manual' // Default to manual if not specified
     },
     sourceIdentifier: {

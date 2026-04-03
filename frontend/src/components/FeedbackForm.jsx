@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../lib/api';
 
 const FeedbackForm = () => {
     const [formData, setFormData] = useState({
@@ -19,7 +19,7 @@ const FeedbackForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:3002/api/feedback', formData);
+            await api.post('/feedback', formData);
             setStatus('Feedback submitted successfully!');
             setFormData({ name: '', email: '', message: '' });
             setTimeout(() => setStatus(''), 3000);
@@ -44,11 +44,15 @@ const FeedbackForm = () => {
                         <div className="container w-full px-4">
                             <div className="flex flex-wrap justify-center">
                                 <div className="w-full lg:w-8/12 px-4">
-                                    <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-white w-96">
+                                    <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-white">
                                         <div className="flex-auto p-5 lg:p-10 ">
                                             <h4 className="text-2xl mb-4 text-black font-semibold">Have a suggestion?</h4>
                                             {status && (
-                                                <div className={`mb-4 p-2 rounded ${status.includes('Error') ? 'bg-red-500' : 'bg-green-500'} text-white text-center`}>
+                                                <div
+                                                    className={`mb-4 p-2 rounded ${status.includes('Error') ? 'bg-red-500' : 'bg-green-500'} text-white text-center`}
+                                                    role={status.includes('Error') ? 'alert' : 'status'}
+                                                    aria-live={status.includes('Error') ? 'assertive' : 'polite'}
+                                                >
                                                     {status}
                                                 </div>
                                             )}
@@ -61,7 +65,7 @@ const FeedbackForm = () => {
                                                         id="name"
                                                         value={formData.name}
                                                         onChange={handleChange}
-                                                        className="border-0 px-3 py-3 rounded text-sm shadow w-full bg-gray-300 placeholder-black text-gray-800 outline-none focus:bg-gray-400"
+                                                        className="focus-ring border-0 px-3 py-3 rounded text-sm shadow w-full bg-gray-300 placeholder-black text-gray-800 focus:bg-gray-400"
                                                         placeholder="Your name"
                                                         required
                                                     />
@@ -74,7 +78,7 @@ const FeedbackForm = () => {
                                                         id="email"
                                                         value={formData.email}
                                                         onChange={handleChange}
-                                                        className="border-0 px-3 py-3 rounded text-sm shadow w-full bg-gray-300 placeholder-black text-gray-800 outline-none focus:bg-gray-400"
+                                                        className="focus-ring border-0 px-3 py-3 rounded text-sm shadow w-full bg-gray-300 placeholder-black text-gray-800 focus:bg-gray-400"
                                                         placeholder="Your email address"
                                                         required
                                                     />
@@ -88,7 +92,7 @@ const FeedbackForm = () => {
                                                         value={formData.message}
                                                         onChange={handleChange}
                                                         maxLength="300"
-                                                        className="border-0 px-3 py-3 bg-gray-300 placeholder-black text-gray-800 rounded text-sm shadow focus:outline-none w-full"
+                                                        className="focus-ring border-0 px-3 py-3 bg-gray-300 placeholder-black text-gray-800 rounded text-sm shadow w-full"
                                                         placeholder="Share your thoughts, suggestions, or report issues..."
                                                         required
                                                     ></textarea>
@@ -96,7 +100,7 @@ const FeedbackForm = () => {
                                                 <div className="text-center mt-6">
                                                     <button
                                                         type="submit"
-                                                        className="bg-yellow-300 text-black text-center mx-auto active:bg-yellow-400 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none"
+                                                        className="focus-ring bg-blue-gradient text-primary text-center mx-auto active:opacity-90 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg"
                                                         style={{ transition: "all 0.15s ease 0s" }}
                                                     >
                                                         Submit

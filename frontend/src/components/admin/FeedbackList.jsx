@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import styles from '../../style';
+import api from '../../lib/api';
 
 const FeedbackList = () => {
     const [feedback, setFeedback] = useState([]);
@@ -15,7 +15,7 @@ const FeedbackList = () => {
 
     const fetchFeedback = async () => {
         try {
-            const response = await axios.get('http://localhost:3002/api/feedback');
+            const response = await api.get('/feedback');
             setFeedback(response.data.data);
             setLoading(false);
         } catch (err) {
@@ -26,7 +26,7 @@ const FeedbackList = () => {
 
     const updateStatus = async (id, newStatus) => {
         try {
-            await axios.patch(`http://localhost:3002/api/feedback/${id}`, {
+            await api.patch(`/feedback/${id}`, {
                 status: newStatus
             });
             fetchFeedback();
@@ -43,8 +43,8 @@ const FeedbackList = () => {
         return item.status === filter;
     });
 
-    if (loading) return <div className={`${styles.heading2} text-center text-white`}>Loading...</div>;
-    if (error) return <div className={`${styles.paragraph} text-center text-red-500`}>{error}</div>;
+    if (loading) return <div className={`${styles.heading2} text-center text-white`} role="status" aria-live="polite">Loading...</div>;
+    if (error) return <div className={`${styles.paragraph} text-center text-red-500`} role="alert" aria-live="assertive">{error}</div>;
 
     return (
         <div className="p-6">
@@ -54,7 +54,7 @@ const FeedbackList = () => {
                     <select
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
-                        className="bg-dimBlue text-white border-none rounded-[10px] py-2 px-4 focus:ring-2 focus:ring-secondary"
+                        className="focus-ring bg-dimBlue text-white border-none rounded-[10px] py-2 px-4 focus:ring-2 focus:ring-secondary"
                     >
                         <option value="all">All Feedback</option>
                         <option value="pending">Pending</option>
@@ -70,12 +70,14 @@ const FeedbackList = () => {
                 {/* Feedback List */}
                 <div className="space-y-4">
                     {filteredFeedback.map((item) => (
-                        <div 
+                        <button
+                            type="button"
                             key={item._id} 
-                            className={`bg-black-gradient-2 p-6 rounded-[20px] cursor-pointer transition-all duration-200 ${
+                            className={`focus-ring text-left w-full bg-black-gradient-2 p-6 rounded-[20px] cursor-pointer transition-all duration-200 ${
                                 selectedFeedback?._id === item._id ? 'ring-2 ring-secondary' : ''
                             }`}
                             onClick={() => setSelectedFeedback(item)}
+                            aria-pressed={selectedFeedback?._id === item._id}
                         >
                             <div className="flex justify-between items-start">
                                 <div>
@@ -94,7 +96,7 @@ const FeedbackList = () => {
                                     {item.status}
                                 </span>
                             </div>
-                        </div>
+                        </button>
                     ))}
                     {filteredFeedback.length === 0 && (
                         <p className={`${styles.paragraph} text-center text-dimWhite`}>No feedback found</p>
@@ -135,7 +137,7 @@ const FeedbackList = () => {
                                     <select
                                         value={selectedFeedback.status}
                                         onChange={(e) => updateStatus(selectedFeedback._id, e.target.value)}
-                                        className="bg-dimBlue text-white border-none rounded-[10px] py-2 px-4 focus:ring-2 focus:ring-secondary"
+                                        className="focus-ring bg-dimBlue text-white border-none rounded-[10px] py-2 px-4 focus:ring-2 focus:ring-secondary"
                                     >
                                         <option value="pending">Pending</option>
                                         <option value="reviewed">Reviewed</option>
@@ -143,7 +145,7 @@ const FeedbackList = () => {
                                 </div>
                                 <button
                                     onClick={() => setSelectedFeedback(null)}
-                                    className={`${styles.paragraph} px-4 py-2 bg-blue-gradient rounded-[10px] text-white hover:opacity-80`}
+                                    className={`focus-ring ${styles.paragraph} px-4 py-2 bg-blue-gradient rounded-[10px] text-white hover:opacity-80`}
                                 >
                                     Close
                                 </button>

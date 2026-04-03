@@ -6,7 +6,6 @@ const Documentation = () => {
   const [showCode, setShowCode] = useState(false);
   const [showEditor, setShowEditor] = useState(false);
   const [copySuccess, setCopySuccess] = useState('');
-  const [showOverlay, setShowOverlay] = useState(false);
   const [sampleCode, setSampleCode] = useState(`
 import toolbatcher
 
@@ -29,7 +28,6 @@ tb.save_script(script, 'my_setup_script.sh')
   const toggleViewCode = () => {
     setShowCode(!showCode);
     setShowEditor(false);
-    setShowOverlay(false);
   };
 
   const toggleEditor = () => {
@@ -76,12 +74,12 @@ tb.save_script(script, 'my_setup_script.sh')
           <li>Troubleshooting</li>
         </ul>
         <div className="flex mt-5">
-          <button className={`${styles.flexCenter} w-[140px] h-[50px] rounded-[10px] bg-blue-gradient p-1 cursor-pointer mr-4`}>
+          <button type="button" className={`focus-ring ${styles.flexCenter} min-h-[50px] rounded-[10px] bg-blue-gradient px-6 cursor-pointer mr-4`}>
             <span className={`font-poppins font-medium text-[18px] text-primary`}>
               Full Docs
             </span>
           </button>
-          <button onClick={toggleViewCode} className={`${styles.flexCenter} w-[140px] h-[50px] rounded-[10px] bg-green-gradient p-1 cursor-pointer`}>
+          <button type="button" onClick={toggleViewCode} className={`focus-ring ${styles.flexCenter} min-h-[50px] rounded-[10px] bg-discount-gradient px-6 cursor-pointer`}>
             <span className={`font-poppins font-medium text-[18px] text-zinc-50     `}>
               {showCode ? 'Hide Code' : 'View Source'}
             </span>
@@ -89,34 +87,29 @@ tb.save_script(script, 'my_setup_script.sh')
         </div>
         {showCode && (  
           <div className="mt-5 relative">
-            <div 
-              className="absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-50 flex items-center justify-center"
-              onMouseEnter={() => setShowOverlay(true)}
-              onMouseLeave={() => setShowOverlay(false)}
-            >
-              {showOverlay && (
-                <div className="flex">
-                  <button 
-                    onClick={copyToClipboard}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm mr-2"
-                  >
-                    {copySuccess || 'Copy'}
-                  </button>
-                  <button 
-                    onClick={toggleEditor}
-                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded text-sm"
-                  >
-                    Edit
-                  </button>
-                </div>
-              )}
+            <div className="flex flex-wrap gap-2 mb-3">
+              <button
+                type="button"
+                onClick={copyToClipboard}
+                className="focus-ring bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm"
+              >
+                {copySuccess || 'Copy'}
+              </button>
+              <button
+                type="button"
+                onClick={toggleEditor}
+                className="focus-ring bg-yellow-500 hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded text-sm"
+              >
+                {showEditor ? 'Preview' : 'Edit'}
+              </button>
+              <button
+                type="button"
+                onClick={downloadCode}
+                className="focus-ring bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm"
+              >
+                Download
+              </button>
             </div>
-            <button 
-              onClick={downloadCode}
-              className="absolute top-2 right-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded text-sm"
-            >
-              Download
-            </button>
             {showEditor ? (
               <CodeEditor initialCode={sampleCode} onSave={handleSaveCode} />
             ) : (

@@ -6,31 +6,29 @@ const GetStarted = () => {
   const scrollToToolSelector = () => {
     const toolSelector = document.getElementById('toolSelector');
     if (toolSelector) {
-      toolSelector.scrollIntoView({ behavior: 'smooth' });
+      const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      toolSelector.scrollIntoView({ behavior: reducedMotionQuery.matches ? 'auto' : 'smooth' });
     }
   };
 
   return (
-    <div 
-      className={`${styles.flexCenter} w-[140px] h-[140px] rounded-full bg-blue-gradient p-[2px] cursor-pointer`}
+    <button
+      type='button'
+      className='focus-ring tb-button-main inline-flex items-center gap-3 px-5 py-3 rounded-lg cursor-pointer'
       onClick={scrollToToolSelector}
+      aria-label='Jump to tool selector'
     >
-      <div className={`${styles.flexCenter} flex-col bg-primary w-[100%] h-[100%] rounded-full`}>
-        <div className={`${styles.flexStart} flex-row`}>
-          <p className='font-poppins font-medium text-[18px] leading-[23px] mr-2'>
-            <span className='text-gradient'>Get</span>
-          </p>
-          <img
-            src={arrowUp}
-            alt='arrow'
-            className='w-[23px] h-[23px] object-contain'
-          />
-        </div>
-        <p className='font-poppins font-medium text-[18px] leading-[23px]'>
-          <span className='text-gradient'>Started</span>
-        </p>
+      <span className='font-semibold tracking-[0.04em] uppercase text-sm'>Open Tool Selector</span>
+      <div className={`${styles.flexCenter} bg-black/15 rounded-md w-9 h-9`}>
+        <img
+          src={arrowUp}
+          alt=''
+          aria-hidden='true'
+          className='w-[20px] h-[20px] object-contain rotate-90'
+          decoding='async'
+        />
       </div>
-    </div>
+    </button>
   )
 }
 

@@ -3,13 +3,17 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"npm run dev --prefix frontend\" \"node backend/index.js\""
+    "dev": "node scripts/run-local.js",
+    "local": "node scripts/run-local.js"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "mysql2": "^3.11.3"
+    "axios": "^1.8.4",
+    "dotenv": "^16.4.7",
+    "mongoose": "^8.13.0",
+    "mysql2": "^3.11.3",
+    "semver": "^7.7.1"
   }
 }

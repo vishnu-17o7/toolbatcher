@@ -1,0 +1,70 @@
+[2025-03-27T13:08:16.993Z] Starting version update process...
+[2025-03-27T13:08:17.123Z] Found 5 tools to check for updates.
+[2025-03-27T13:08:17.124Z] Checking tool: git (Source: manual, ID: )
+[2025-03-27T13:08:17.125Z] Checking tool: node (Source: npm, ID: https://www.npmjs.com/package/node?activeTab=versions)
+[2025-03-27T13:08:17.125Z] Checking tool: docker (Source: manual, ID: )
+[2025-03-27T13:08:17.125Z] Checking tool: python (Source: manual, ID: )
+[2025-03-27T13:08:17.126Z] Checking tool: fastfetch (Source: manual, ID: )
+[2025-03-27T13:08:17.127Z] ERROR: Unknown sourceType 'manual' for tool git
+[2025-03-27T13:08:19.544Z] ERROR: Error fetching NPM version for https://www.npmjs.com/package/node?activeTab=versions: Command failed: npm view https://www.npmjs.com/package/node?activeTab=versions version
+npm WARN tar TAR_ENTRY_INVALID checksum failure
+checksum failure
+npm WARN tar TAR_ENTRY_INVALID checksum failure
+npm WARN tar TAR_ENTRY_INVALID checksum failure
+npm WARN tar TAR_ENTRY_INVALID checksum failure
+npm WARN tar TAR_ENTRY_INVALID checksum failure
+npm WARN tar TAR_ENTRY_INVALID checksum failure
+npm WARN tar TAR_ENTRY_INVALID checksum failure
+npm WARN tar TAR_ENTRY_INVALID checksum failure
+npm WARN tar TAR_ENTRY_INVALID checksum failure
+npm WARN tar TAR_ENTRY_INVALID checksum failure
+npm WARN tar TAR_ENTRY_INVALID checksum failure
+npm WARN tar TAR_ENTRY_INVALID checksum failure
+npm WARN tar TAR_ENTRY_INVALID checksum failure
+npm WARN tar TAR_BAD_ARCHIVE: Unrecognized archive format
+npm ERR! code TAR_BAD_ARCHIVE
+npm ERR! TAR_BAD_ARCHIVE: Unrecognized archive format
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     C:\Users\vishn\AppData\Local\npm-cache\_logs\2025-03-27T13_08_18_188Z-debug-0.log
+
+[2025-03-27T13:08:19.568Z] ERROR: Unknown sourceType 'manual' for tool docker
+[2025-03-27T13:08:19.569Z] ERROR: Unknown sourceType 'manual' for tool python
+[2025-03-27T13:08:19.570Z] ERROR: Unknown sourceType 'manual' for tool fastfetch
+[2025-03-27T13:08:19.571Z] ERROR: Could not determine latest version for git.
+[2025-03-27T13:08:19.571Z] ERROR: Could not determine latest version for node.
+[2025-03-27T13:08:19.572Z] ERROR: Could not determine latest version for fastfetch.
+[2025-03-27T13:08:19.572Z] ERROR: Could not determine latest version for docker.
+[2025-03-27T13:08:19.573Z] ERROR: Could not determine latest version for python.
+[2025-03-27T13:08:19.573Z] ---
+[2025-03-27T13:08:19.574Z] ---
+[2025-03-27T13:08:19.574Z] ---
+[2025-03-27T13:08:19.575Z] ---
+[2025-03-27T13:08:19.575Z] ---
+[2025-03-27T13:08:19.576Z] Version update process finished. Checked: 5, Updated: 0.
+[2025-03-27T13:08:19.585Z] Database connection closed.
+[2025-04-12T07:37:07.323Z] Starting version update process...
+[2025-04-12T07:37:07.391Z] Found 5 tools to check for updates.
+[2025-04-12T07:37:07.392Z] Checking tool: git (Source: manual, ID: )
+[2025-04-12T07:37:07.393Z] Checking tool: python (Source: manual, ID: )
+[2025-04-12T07:37:07.393Z] Checking tool: node (Source: npm, ID: https://www.npmjs.com/package/node?activeTab=versions)
+[2025-04-12T07:37:07.393Z] Checking tool: docker (Source: manual, ID: )
+[2025-04-12T07:37:07.393Z] Checking tool: fastfetch (Source: manual, ID: )
+[2025-04-12T07:37:07.394Z] Skipping manual tool: git
+[2025-04-12T07:37:07.394Z] Skipping manual tool: python
+[2025-04-12T07:37:08.693Z] Skipping manual tool: docker
+[2025-04-12T07:37:08.693Z] NPM check for https://www.npmjs.com/package/node?activeTab=versions: Found version 23.11.0
+[2025-04-12T07:37:08.693Z] Skipping manual tool: fastfetch
+[2025-04-12T07:37:08.700Z] ERROR: Could not determine latest version for git.
+[2025-04-12T07:37:08.700Z] ERROR: Could not determine latest version for python.
+[2025-04-12T07:37:08.701Z] ERROR: Could not determine latest version for docker.
+[2025-04-12T07:37:08.701Z] New version found for node: 23.11.0 (Previous latest: 20.19.0)
+[2025-04-12T07:37:08.701Z] ERROR: Could not determine latest version for fastfetch.
+[2025-04-12T07:37:08.702Z] ---
+[2025-04-12T07:37:08.702Z] ---
+[2025-04-12T07:37:08.703Z] ---
+[2025-04-12T07:37:08.714Z] ---
+[2025-04-12T07:37:08.742Z] Successfully updated node to version 23.11.0
+[2025-04-12T07:37:08.743Z] ---
+[2025-04-12T07:37:08.744Z] Version update process finished. Checked: 5, Updated: 1.
+[2025-04-12T07:37:08.749Z] Database connection closed.

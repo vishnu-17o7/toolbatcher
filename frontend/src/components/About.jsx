@@ -1,30 +1,20 @@
 import React from 'react'
 import styles, { layout } from '../style'
-import { image } from '../assets'
+import { bill } from '../assets'
 
 const About = () => {
   return (
-    <section id="about" className={layout.sectionReverse}>
+    <section id="about" className={`${layout.sectionReverse} tb-reveal gap-12 md:gap-14`}>
       <div className={layout.sectionImgReverse}>
-        {/* Wrapper for image with blurred border */}
         <div className="relative w-[100%] h-[100%] overflow-hidden">
-          {/* Div to handle the blur effect on the border */}
-          <div className="absolute inset-0 z-[4]" style={{
-            padding: '10px', // Adjust the padding to control the size of the blur effect
-            filter: 'blur(10px)', // Applying blur to this wrapper div
-            borderRadius: '20px', // Optional: adjust the shape of the blur border
-            backgroundColor: 'transparent', // Ensure the area is transparent
-            boxShadow: '0 0 15px rgba(0, 0, 0, 0.5)', // Blurred border with shadow
-          }}></div>
+          <div className="absolute inset-0 z-[4] rounded-[20px] border border-[color:var(--color-stroke)] shadow-[0_0_22px_oklch(0.58_0.04_72_/0.24)]"></div>
 
-          {/* Actual Image */}
           <img
-            src={image}
+            src={bill}
             alt="toolbatcher"
-            className="w-[100%] h-[100%] relative z-[5] transform -scale-x-100"
-            style={{
-              borderRadius: '20px', // Same radius as the blur border
-            }}
+            className="w-[100%] h-[100%] relative z-[5] transform -scale-x-100 rounded-[20px]"
+            loading="lazy"
+            decoding="async"
           />
         </div>
         <div className="absolute z-[3] -left-1/2 top-0 w-[50%] h-[50%] rounded-full white__gradient" />
@@ -32,18 +22,20 @@ const About = () => {
       </div>
 
       <div className={layout.sectionInfo}>
+        <p className='tb-kicker'>about the platform</p>
         <h2 className={styles.heading2}>
-          About Toolbatcher: <br className="sm:block hidden" /> Simplifying Development Setups
+          Engineering onboarding should feel deliberate, not chaotic.
         </h2>
+
         <p className={`${styles.paragraph} max-w-[470px] mt-5`}>
-          Toolbatcher was born out of the frustration of spending countless hours setting up development environments. Our mission is to streamline this process, allowing developers to focus on what they do best - coding.
+          ToolBatcher was created for teams tired of brittle setup docs and inconsistent local machines. We turn install steps into reproducible plans that engineers can review, trust, and run quickly.
         </p>
-        <p className={`${styles.paragraph} max-w-[470px] mt-5`}>
-          We understand that every project is unique, requiring different tools and configurations. That's why we've created a platform that allows you to easily select the tools you need, specify their versions, and generate custom installation scripts tailored to your target operating system.
-        </p>
-        <p className={`${styles.paragraph} max-w-[470px] mt-5`}>
-          Whether you're a seasoned developer or just starting out, Toolbatcher is here to make your life easier. Say goodbye to configuration headaches and hello to more productive coding time!
-        </p>
+
+        <ul className='mt-6 space-y-3 text-dimWhite'>
+          <li className='flex gap-3'><span className='text-secondary'>01</span><span>Version-aware installs for npm, PyPI, GitHub releases, Homebrew, and Winget sources.</span></li>
+          <li className='flex gap-3'><span className='text-secondary'>02</span><span>Signed manifests and one-time runner delivery to protect execution integrity.</span></li>
+          <li className='flex gap-3'><span className='text-secondary'>03</span><span>Cross-platform generation for Linux, macOS, and Windows with clear review flow.</span></li>
+        </ul>
       </div>
     </section>
   )

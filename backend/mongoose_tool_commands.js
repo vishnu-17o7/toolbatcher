@@ -22,38 +22,38 @@ async function insertSampleData() {
   const sampleData = [
     {
       toolName: "git",
-      versions: ["2.30.0", "2.31.0", "2.32.0"],
+      versions: ["latest"],
       commands: {
         linux: "sudo apt install git={version}",
         macos: "brew install git@{version}",
-        windows: "winget install Git.Git -v {version}"
+        windows: "winget install --id Git.Git --exact --accept-source-agreements --accept-package-agreements"
       }
     },
     {
       toolName: "node",
-      versions: ["14.17.0", "16.3.0", "17.0.0"],
+      versions: ["latest"],
       commands: {
         linux: "sudo apt install nodejs={version}",
         macos: "brew install node@{version}",
-        windows: "winget install OpenJS.NodeJS -v {version}"
+        windows: "winget install --id OpenJS.NodeJS.LTS --exact --accept-source-agreements --accept-package-agreements"
       }
     },
     {
       toolName: "python",
-      versions: ["3.8.0", "3.9.0", "3.10.0"],
+      versions: ["latest"],
       commands: {
         linux: "sudo apt install python3={version}",
         macos: "brew install python@{version}",
-        windows: "winget install Python.Python -v {version}"
+        windows: "winget install --id Python.Python.3.12 --exact --accept-source-agreements --accept-package-agreements"
       }
     },
     {
       toolName: "docker",
-      versions: ["20.10.0", "20.11.0", "20.12.0"],
+      versions: ["latest"],
       commands: {
         linux: "sudo apt install docker.io={version}",
         macos: "brew install --cask docker",
-        windows: "winget install Docker.DockerDesktop -v {version}"
+        windows: "winget install --id Docker.DockerDesktop --exact --accept-source-agreements --accept-package-agreements"
       }
     }
   ];

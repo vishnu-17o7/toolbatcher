@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { 
   CTA, 
@@ -6,16 +6,16 @@ import {
   Hero, 
   Navbar, 
   Stats, 
-  ToolSelector,
-  Documentation,
-  HowToUse,
-  Features,
-  About,
-  AdminPage
+  ToolSelector
 } from './components';
-
-import FeedbackForm from './components/FeedbackForm';
 import styles from './style';
+
+const Documentation = lazy(() => import('./components/Documentation'));
+const HowToUse = lazy(() => import('./components/HowToUse'));
+const Features = lazy(() => import('./components/Features'));
+const About = lazy(() => import('./components/About'));
+const FeedbackForm = lazy(() => import('./components/FeedbackForm'));
+const AdminPage = lazy(() => import('./components/AdminPage'));
 
 const Home = () => (
   <>
@@ -31,29 +31,31 @@ const AppContent = () => {
   const isAdminPage = location.pathname === '/admin';
 
   return (
-    <div className='bg-primary w-full overflow-hidden'>
+    <div className='tb-page bg-primary w-full min-h-screen overflow-hidden'>
       {!isAdminPage && (
-        <div className={`${styles.paddingX} ${styles.flexCenter}`}>
+        <div className={`${styles.paddingX} ${styles.flexCenter} relative z-10`}>
           <div className={`${styles.boxWidth}`}>
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center tb-nav">
               <Navbar/>
             </div>
           </div>
         </div>
       )}
-      <div className={`bg-primary ${styles.paddingX} ${styles.flexStart}`}>
+      <main className={`bg-primary ${styles.paddingX} ${styles.flexStart} relative z-10`}>
         <div className={`${styles.boxWidth}`}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/documentation" element={<Documentation />} />
-            <Route path="/how-to-use" element={<HowToUse />} />
-            <Route path="/features" element={<Features />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/feedback" element={<FeedbackForm />} />
-            <Route path="/admin" element={<AdminPage />} />
-          </Routes>
+          <Suspense fallback={<div className="tb-surface rounded-xl px-4 py-6 text-dimWhite">Loading page module...</div>}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/documentation" element={<Documentation />} />
+              <Route path="/how-to-use" element={<HowToUse />} />
+              <Route path="/features" element={<Features />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/feedback" element={<FeedbackForm />} />
+              <Route path="/admin" element={<AdminPage />} />
+            </Routes>
+          </Suspense>
         </div>
-      </div>
+      </main>
       {!isAdminPage && <Footer/>}
     </div>
   );
